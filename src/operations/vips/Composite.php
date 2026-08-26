@@ -9,6 +9,7 @@ namespace mako\pixel\image\operations\vips;
 
 use Jcupitt\Vips\BlendMode;
 use Jcupitt\Vips\Image;
+use Jcupitt\Vips\Interpretation;
 use mako\pixel\image\geometry\Point;
 use mako\pixel\image\operations\OperationInterface;
 use mako\pixel\image\Vips;
@@ -34,13 +35,13 @@ class Composite implements OperationInterface
 	public function apply(object &$imageResource): void
 	{
 		if ($imageResource->interpretation === 'multiband') {
-			$imageResource = $imageResource->colourspace('srgb');
+			$imageResource = $imageResource->colourspace(Interpretation::SRGB);
 		}
 
 		$composite = $this->image->getImageResource();
 
 		if ($composite->interpretation === 'multiband') {
-			$composite = $composite->colourspace('srgb');
+			$composite = $composite->colourspace(Interpretation::SRGB);
 		}
 
 		$blended = $imageResource->composite2(

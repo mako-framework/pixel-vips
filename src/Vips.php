@@ -9,6 +9,7 @@ namespace mako\pixel\image;
 
 use Jcupitt\Vips\Exception as VipsException;
 use Jcupitt\Vips\Image as VipsImage;
+use Jcupitt\Vips\Interpretation;
 use mako\pixel\image\exceptions\ImageException;
 use mako\pixel\image\geometry\Dimensions;
 use Override;
@@ -56,7 +57,7 @@ class Vips extends Image
 			$fill->alpha,
 		])
 		->cast('uchar')
-		->copy(['interpretation' => 'srgb']);
+		->copy(['interpretation' => Interpretation::SRGB]);
 	}
 
 	/**
