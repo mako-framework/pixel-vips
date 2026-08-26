@@ -147,6 +147,9 @@ class Bezier implements OperationInterface
 
 		$imageResource = $imageResource->composite2($overlay, BlendMode::OVER);
 
+		// GIF only supports 1-bit alpha, so partially transparent (anti-aliased)
+        // stroke pixels would be quantized away. Make alpha binary instead.
+
 		$alpha = $imageResource->extract_band($imageResource->bands - 1);
 
 		$imageResource = $imageResource
