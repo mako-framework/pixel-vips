@@ -1,0 +1,39 @@
+{
+    "name": "mako/pixel-vips",
+    "description": "(Experimental) Vips for pixel",
+    "keywords": ["mako", "framework", "frankenphp"],
+    "homepage": "http://makoframework.com",
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Frederic G. Østby",
+            "email": "frederic.g.ostby@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "mako\\pixel\\image\\": "src"
+        }
+    },
+    "require": {
+        "php": ">=8.5.0",
+        "jcupitt/vips": "^2.6"
+    },
+    "require-dev": {
+        "mako/framework": "^13.0.0@dev",
+        "phpstan/phpstan": "^2.1"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    },
+    "scripts": {
+        "phpstan": "phpstan analyze src --no-progress --memory-limit=-1 -c phpstan.neon",
+        "qa": [
+            "@phpstan"
+        ]
+    }
+}
