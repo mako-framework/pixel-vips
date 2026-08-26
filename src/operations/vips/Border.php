@@ -7,6 +7,7 @@
 
 namespace mako\pixel\image\operations\vips;
 
+use Jcupitt\Vips\BlendMode;
 use Jcupitt\Vips\Image;
 use mako\pixel\image\Color;
 use mako\pixel\image\operations\OperationInterface;
@@ -88,7 +89,7 @@ class Border implements OperationInterface
 			// the border ring's alpha to be at least the frame's alpha
 			// (255 over transparent pixels stays blended elsewhere).
 
-			$blended = $frame->composite2($overlay, 'over');
+			$blended = $frame->composite2($overlay, BlendMode::OVER);
 
 			$mask = $overlay->extract_band(3)->more(0);
 

@@ -7,6 +7,7 @@
 
 namespace mako\pixel\image\operations\vips;
 
+use Jcupitt\Vips\BlendMode;
 use Jcupitt\Vips\Image;
 use mako\pixel\image\geometry\Point;
 use mako\pixel\image\operations\OperationInterface;
@@ -44,7 +45,7 @@ class Composite implements OperationInterface
 
 		$blended = $imageResource->composite2(
 			$composite,
-			'over',
+			BlendMode::OVER,
 			['x' => $this->position->x, 'y' => $this->position->y]
 		);
 
