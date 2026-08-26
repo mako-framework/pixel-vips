@@ -32,11 +32,11 @@ class Composite implements OperationInterface
 	#[Override]
 	public function apply(object &$imageResource): void
 	{
-		$composite = $this->image->getImageResource();
-
 		if ($imageResource->interpretation === 'multiband') {
 			$imageResource = $imageResource->colourspace('srgb');
 		}
+
+		$composite = $this->image->getImageResource();
 
 		if ($composite->interpretation === 'multiband') {
 			$composite = $composite->colourspace('srgb');
