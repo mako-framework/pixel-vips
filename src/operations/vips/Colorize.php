@@ -8,6 +8,7 @@
 namespace mako\pixel\image\operations\vips;
 
 use Jcupitt\Vips\Image;
+use Jcupitt\Vips\Interpretation;
 use mako\pixel\image\Color;
 use mako\pixel\image\operations\OperationInterface;
 use Override;
@@ -33,6 +34,10 @@ class Colorize implements OperationInterface
 	#[Override]
 	public function apply(object &$imageResource): void
 	{
+		$interpretation = $imageResource->interpretation;
+
+		$imageResource = $imageResource->colourspace(Interpretation::SRGB);
+
 		$alpha = null;
 
 		if ($imageResource->hasAlpha()) {
@@ -50,5 +55,7 @@ class Colorize implements OperationInterface
 		if ($alpha !== null) {
 			$imageResource = $imageResource->bandjoin($alpha);
 		}
+
+		$imageResource = $imageResource->colourspace($interpretation);
 	}
 }
