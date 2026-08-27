@@ -36,3 +36,28 @@ See the [libvips installation documentation](https://www.libvips.org/install.htm
 ```bash
 composer require mako/pixel-vips
 ```
+
+## Usage
+
+The Vips driver works just like the GD and ImageMagick drivers and shares the exact same API.
+
+```php
+$image = new Vips('image.png');
+
+$image->apply(new Pipeline(
+	new Sharpen,
+	new Border(new Color(0, 0, 0, 127), width: 10),
+));
+
+$image->save();
+```
+
+### Access mode
+
+Images are loaded using random access by default, which supports all operations and inspectors. If you're only doing single-pass processing (load, transform, save) then you can switch to sequential access for better performance and lower memory usage.
+
+```php
+Vips::setAccessMode(AccessMode::Sequential);
+```
+
+> Note that operations and inspectors that read pixels out of order (e.g. pixel inspection or rotation by arbitrary angles) will fail when using sequential access.

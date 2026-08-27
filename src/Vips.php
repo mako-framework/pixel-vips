@@ -12,6 +12,7 @@ use Jcupitt\Vips\Image as VipsImage;
 use Jcupitt\Vips\Interpretation;
 use mako\pixel\image\exceptions\ImageException;
 use mako\pixel\image\geometry\Dimensions;
+use mako\pixel\image\vips\AccessMode;
 use Override;
 
 use function fwrite;
@@ -29,6 +30,11 @@ use function strtolower;
  */
 class Vips extends Image
 {
+	/**
+	 * Access mode.
+	 */
+	protected static AccessMode $access = AccessMode::Random;
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -100,7 +106,7 @@ class Vips extends Image
 		$this->imagePath = $imagePath;
 
 		try {
-			$imageResource = VipsImage::newFromFile($imagePath, ['access' => 'sequential']);
+			$imageResource = VipsImage::newFromFile($imagePath, ['access' => static::$access->value]);
 		}
 		catch (VipsException $e) {
 			throw new ImageException(sprintf('Unable to process the image [ %s ].', $imagePath), previous: $e);
@@ -118,7 +124,7 @@ class Vips extends Image
 	protected function createImageResourceFromBlob(string $blob): object
 	{
 		try {
-			$imageResource = VipsImage::newFromBuffer($blob);
+			$imageResource = VipsImage::newFromBuffer($blob, options: ['access' => static::$access->value]);
 		}
 		catch (VipsException $e) {
 			throw new ImageException('Unable to process the image.', previous: $e);
@@ -221,6 +227,19 @@ class Vips extends Image
 			default:
 				throw new ImageException(sprintf('Unable to save as [ %s ]. Unsupported image format.', $extension));
 		}
+	}
+
+	/**
+	 * Sets the libvips access mode.
+	 *
+	 * Random access (the default) supports all operations and inspectors.
+	 * Sequential access is faster and uses less memory but only supports
+	 * single-pass pipelines; operations that read pixels out of order
+	 * (e.g. pixel inspection or arbitrary rotation) will fail.
+	 */
+	public static function setAccessMode(AccessMode $access): void
+	{
+		static::$access = $access;
 	}
 
 	/**
