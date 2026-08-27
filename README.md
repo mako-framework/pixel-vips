@@ -1,5 +1,6 @@
 # Vips for Pixel
 
+[![Tests](https://github.com/mako-framework/pixel-vips/actions/workflows/tests.yml/badge.svg)](https://github.com/mako-framework/pixel-vips/actions/workflows/tests.yml)
 [![Static analysis](https://github.com/mako-framework/pixel-vips/actions/workflows/static-analysis.yml/badge.svg)](https://github.com/mako-framework/pixel-vips/actions/workflows/static-analysis.yml)
 
 A [libvips](https://www.libvips.org/) driver for the Mako Pixel image processing library.
