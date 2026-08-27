@@ -1,6 +1,6 @@
 {
     "name": "mako/pixel-vips",
-    "description": "(Experimental) Vips for pixel",
+    "description": "Vips driver for the Mako pixel image processing library",
     "keywords": ["mako", "framework", "frankenphp"],
     "homepage": "http://makoframework.com",
     "license": "BSD-3-Clause",
