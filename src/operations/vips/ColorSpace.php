@@ -38,12 +38,12 @@ class ColorSpace implements OperationInterface
 	public function apply(object &$imageResource): void
 	{
 		$interpretation = match ($this->colorSpace) {
-			ColorSpaceEnum::Cmyk  => Interpretation::CMYK,
-			ColorSpaceEnum::Gray  => Interpretation::B_W,
-			ColorSpaceEnum::Lab   => Interpretation::LAB,
-			ColorSpaceEnum::Rgb   => Interpretation::RGB16,
-			ColorSpaceEnum::Srgb  => Interpretation::SRGB,
-			ColorSpaceEnum::Xyz   => Interpretation::XYZ,
+			ColorSpaceEnum::Cmyk => Interpretation::CMYK,
+			ColorSpaceEnum::Gray => Interpretation::B_W,
+			ColorSpaceEnum::Lab => Interpretation::LAB,
+			ColorSpaceEnum::Rgb => Interpretation::RGB16,
+			ColorSpaceEnum::Srgb => Interpretation::SRGB,
+			ColorSpaceEnum::Xyz => Interpretation::XYZ,
 			default => null,
 		};
 
