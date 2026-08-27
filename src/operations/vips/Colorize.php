@@ -34,8 +34,6 @@ class Colorize implements OperationInterface
 	#[Override]
 	public function apply(object &$imageResource): void
 	{
-		$interpretation = $imageResource->interpretation;
-
 		$imageResource = $imageResource->colourspace(Interpretation::SRGB);
 
 		$alpha = null;
@@ -55,7 +53,5 @@ class Colorize implements OperationInterface
 		if ($alpha !== null) {
 			$imageResource = $imageResource->bandjoin($alpha);
 		}
-
-		$imageResource = $imageResource->colourspace($interpretation);
 	}
 }
