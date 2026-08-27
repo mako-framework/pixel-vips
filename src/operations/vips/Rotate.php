@@ -42,9 +42,9 @@ class Rotate implements OperationInterface
 
 		if ($degrees % 90 === 0) {
 			$imageResource = match ($degrees) {
-				90  => $imageResource->rot90(),
-				180 => $imageResource->rot180(),
-				270 => $imageResource->rot270(),
+				90      => $imageResource->rot90(),
+				180     => $imageResource->rot180(),
+				default => $imageResource->rot270(),
 			};
 
 			return;
