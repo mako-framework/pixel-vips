@@ -62,7 +62,7 @@ class TopColors implements InspectorInterface
 		$pixels = $image->width * $image->height;
 
 		if ($pixels > static::MAX_SAMPLE_PIXELS) {
-			$image = $image->resize(sqrt(static::MAX_SAMPLE_PIXELS / $pixels));
+			$image = $image->resize(sqrt(static::MAX_SAMPLE_PIXELS / $pixels), ['kernel' => 'nearest']);
 		}
 
 		// Extract the raw RGBA bytes and group similar colors by quantizing
