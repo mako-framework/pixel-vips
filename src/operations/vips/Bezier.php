@@ -8,12 +8,12 @@
 namespace mako\pixel\image\operations\vips;
 
 use InvalidArgumentException;
-use Jcupitt\Vips\BlendMode;
 use Jcupitt\Vips\Image;
 use mako\pixel\image\Color;
 use mako\pixel\image\geometry\Point;
 use mako\pixel\image\geometry\Points;
 use mako\pixel\image\operations\OperationInterface;
+use mako\pixel\image\operations\vips\traits\SvgTrait;
 use Override;
 
 use function count;
@@ -25,6 +25,8 @@ use function sprintf;
  */
 class Bezier implements OperationInterface
 {
+	use SvgTrait;
+
 	/**
 	 * Number of line segments used to approximate higher-order curves.
 	 */
@@ -127,33 +129,12 @@ class Bezier implements OperationInterface
 			];
 		}
 
-		$svg = sprintf(<<<'SVG'
-			<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d">
-				<path d="%s" fill="none" stroke="%s" stroke-width="%d" stroke-linejoin="round" stroke-linecap="round"/>
-			</svg>
-			SVG,
-			$imageResource->width,
-			$imageResource->height,
+		$this->compositeSvg(
+			$imageResource,
+			'<path d="%s" fill="none" stroke="%s" stroke-width="%d" stroke-linejoin="round" stroke-linecap="round"/>',
 			$this->buildPath($points),
 			$this->stroke->toRgbaString(),
 			$this->strokeWidth
 		);
-
-		$overlay = Image::svgload_buffer($svg);
-
-		if (!$imageResource->hasAlpha()) {
-			$imageResource = $imageResource->bandjoin_const(255);
-		}
-
-		$imageResource = $imageResource->composite2($overlay, BlendMode::OVER);
-
-		// GIF only supports 1-bit alpha, so partially transparent (anti-aliased)
-        // stroke pixels would be quantized away. Make alpha binary instead.
-
-		$alpha = $imageResource->extract_band($imageResource->bands - 1);
-
-		$imageResource = $imageResource
-		->extract_band(0, ['n' => $imageResource->bands - 1])
-		->bandjoin($alpha->more(0)->ifthenelse(255, 0));
 	}
 }

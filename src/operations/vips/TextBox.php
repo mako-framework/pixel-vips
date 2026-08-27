@@ -16,16 +16,18 @@ use mako\pixel\image\geometry\Dimensions;
 use mako\pixel\image\geometry\Point;
 use mako\pixel\image\operations\Font;
 use mako\pixel\image\operations\OperationInterface;
+use mako\pixel\image\operations\vips\traits\SvgTrait;
 use Override;
 
 use function htmlspecialchars;
-use function sprintf;
 
 /**
  * Draws a text box on the image.
  */
 class TextBox implements OperationInterface
 {
+	use SvgTrait;
+
 	/**
 	 * Constructor.
 	 */
@@ -48,13 +50,9 @@ class TextBox implements OperationInterface
 	 */
 	protected function drawBox(Image $imageResource): Image
 	{
-		$svg = sprintf(<<<'SVG'
-			<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d">
-				<rect x="%d" y="%d" width="%d" height="%d" fill="%s" stroke="%s" stroke-width="%d"/>
-			</svg>
-			SVG,
-			$imageResource->width,
-			$imageResource->height,
+		$this->compositeSvg(
+			$imageResource,
+			'<rect x="%d" y="%d" width="%d" height="%d" fill="%s" stroke="%s" stroke-width="%d"/>',
 			$this->position->x,
 			$this->position->y,
 			$this->dimensions->width,
@@ -64,7 +62,7 @@ class TextBox implements OperationInterface
 			$this->stroke !== null ? $this->strokeWidth : 0
 		);
 
-		return $imageResource->composite2(Image::svgload_buffer($svg), BlendMode::OVER);
+		return $imageResource;
 	}
 
 	/**
@@ -97,16 +95,7 @@ class TextBox implements OperationInterface
 		$x = $this->position->x + (int) (($this->dimensions->width - $mask->width) / 2);
 		$y = $this->position->y + (int) (($this->dimensions->height - $mask->height) / 2);
 
-		$imageResource = $imageResource->composite2($text->cast('uchar'), BlendMode::OVER, ['x' => $x, 'y' => $y]);
-
-		// GIF only supports 1-bit alpha, so partially transparent (anti-aliased)
-        // stroke pixels would be quantized away. Make alpha binary instead.
-
-		$alpha = $imageResource->extract_band($imageResource->bands - 1);
-
-		return $imageResource
-		->extract_band(0, ['n' => $imageResource->bands - 1])
-		->bandjoin($alpha->more(0)->ifthenelse(255, 0));
+		return $imageResource->composite2($text->cast('uchar'), BlendMode::OVER, ['x' => $x, 'y' => $y]);
 	}
 
 	/**
