@@ -15,7 +15,7 @@ This package is built on top of [`jcupitt/vips`](https://packagist.org/packages/
 
 libvips is not bundled with this package and must be installed separately.
 
-The libvips package name varies between operating systems and distributions. The following are examples and may differ depending on your system and the version of libvips available.
+> Note that the libvips package name varies between operating systems and distributions. The following are examples and may differ depending on your system and the version of libvips available.
 
 ### Debian / Ubuntu
 
