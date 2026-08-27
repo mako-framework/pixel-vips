@@ -90,6 +90,9 @@ class Vips extends Image
 			case str_contains($loader, 'bmp'):
 				$mimeType = 'image/bmp';
 				break;
+			case str_contains($loader, 'tiff'):
+				$mimeType = 'image/tiff';
+				break;
 			default:
 				$mimeType = 'application/octet-stream';
 		}
@@ -182,6 +185,10 @@ class Vips extends Image
 			case 'bmp':
 			case 'image/bmp':
 				return $this->imageResource->writeToBuffer('.bmp');
+			case 'tif':
+			case 'tiff':
+			case 'image/tiff':
+				return $this->imageResource->writeToBuffer('.tif', ['Q' => $quality]);
 			default:
 				throw new ImageException(sprintf('Unsupported image type [ %s ].', $type));
 		}
@@ -223,6 +230,10 @@ class Vips extends Image
 				break;
 			case 'bmp':
 				$this->imageResource->writeToFile($imagePath);
+				break;
+			case 'tif':
+			case 'tiff':
+				$this->imageResource->writeToFile($imagePath, ['Q' => $quality]);
 				break;
 			default:
 				throw new ImageException(sprintf('Unable to save as [ %s ]. Unsupported image format.', $extension));
