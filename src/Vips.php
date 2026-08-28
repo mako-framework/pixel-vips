@@ -7,6 +7,7 @@
 
 namespace mako\pixel\image;
 
+use finfo;
 use Jcupitt\Vips\Exception as VipsException;
 use Jcupitt\Vips\Image as VipsImage;
 use Jcupitt\Vips\Interpretation;
@@ -19,7 +20,6 @@ use function fwrite;
 use function pathinfo;
 use function round;
 use function sprintf;
-use function str_contains;
 use function stream_get_contents;
 use function strtolower;
 
@@ -34,6 +34,11 @@ class Vips extends Image
 	 * Access mode.
 	 */
 	protected static AccessMode $access = AccessMode::Random;
+
+	/**
+	 * File info.
+	 */
+	protected static ?finfo $finfo = null;
 
 	/**
 	 * {@inheritDoc}
@@ -67,37 +72,11 @@ class Vips extends Image
 	}
 
 	/**
-	 * Returns the mime type of the image based on the vips loader that was used to load it.
+	 * Get finfo instance.
 	 */
-	protected function getMimeTypeFromLoader(string $loader): string
+	protected static function getFinfo(): finfo
 	{
-		switch (true) {
-			case str_contains($loader, 'jpeg'):
-				$mimeType = 'image/jpeg';
-				break;
-			case str_contains($loader, 'png'):
-				$mimeType = 'image/png';
-				break;
-			case str_contains($loader, 'gif'):
-				$mimeType = 'image/gif';
-				break;
-			case str_contains($loader, 'webp'):
-				$mimeType = 'image/webp';
-				break;
-			case str_contains($loader, 'avif'):
-				$mimeType = 'image/avif';
-				break;
-			case str_contains($loader, 'bmp'):
-				$mimeType = 'image/bmp';
-				break;
-			case str_contains($loader, 'tiff'):
-				$mimeType = 'image/tiff';
-				break;
-			default:
-				$mimeType = 'application/octet-stream';
-		}
-
-		return $this->normalizeMimeType($mimeType);
+		return static::$finfo ??= new finfo(FILEINFO_MIME_TYPE);
 	}
 
 	/**
@@ -115,7 +94,7 @@ class Vips extends Image
 			throw new ImageException(sprintf('Unable to process the image [ %s ].', $imagePath), previous: $e);
 		}
 
-		$this->mimeType = $this->getMimeTypeFromLoader($imageResource->get('vips-loader'));
+		$this->mimeType = $this->normalizeMimeType(static::getFinfo()->file($imagePath));
 
 		return $imageResource;
 	}
@@ -133,7 +112,7 @@ class Vips extends Image
 			throw new ImageException('Unable to process the image.', previous: $e);
 		}
 
-		$this->mimeType = $this->getMimeTypeFromLoader($imageResource->get('vips-loader'));
+		$this->mimeType = $this->normalizeMimeType(static::getFinfo()->buffer($blob));
 
 		return $imageResource;
 	}
@@ -157,41 +136,36 @@ class Vips extends Image
 	}
 
 	/**
+	 * Returns the vips file suffix and save options for the specified image type or extension.
+	 *
+	 * @return array{string, array<string, mixed>}
+	 */
+	protected function getSuffixAndSaveOptions(string $type, int $quality): array
+	{
+		return match (strtolower($type)) {
+			'avif', 'image/avif'                       => ['.avif', ['Q' => $quality]],
+			'bmp', 'image/bmp'                         => ['.bmp', []],
+			'gif', 'image/gif'                         => ['.gif', []],
+			'heic', 'heif', 'image/heic', 'image/heif' => ['.heic', ['Q' => $quality]],
+			'jp2', 'image/jp2'                         => ['.jp2', ['Q' => $quality]],
+			'jpg', 'jpeg', 'image/jpg', 'image/jpeg'   => ['.jpg', ['Q' => $quality]],
+			'jxl', 'image/jxl'                         => ['.jxl', ['Q' => $quality]],
+			'png', 'image/png'                         => ['.png', ['compression' => (int) (9 - (round(($quality / 100) * 9)))]],
+			'tif', 'tiff', 'image/tiff'                => ['.tif', ['Q' => $quality]],
+			'webp', 'image/webp'                       => ['.webp', ['Q' => $quality]],
+			default                                    => throw new ImageException(sprintf('Unsupported image type [ %s ].', $type)),
+		};
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	#[Override]
 	protected function getImageResourceAsBlob(?string $type, int $quality): string
 	{
-		$type ??= $this->mimeType;
+		[$suffix, $options] = $this->getSuffixAndSaveOptions($type ?? $this->mimeType, $quality);
 
-		switch (strtolower($type)) {
-			case 'gif':
-			case 'image/gif':
-				return $this->imageResource->writeToBuffer('.gif');
-			case 'jpg':
-			case 'jpeg':
-			case 'image/jpg':
-			case 'image/jpeg':
-				return $this->imageResource->writeToBuffer('.jpg', ['Q' => $quality]);
-			case 'png':
-			case 'image/png':
-				return $this->imageResource->writeToBuffer('.png', ['compression' => (int) (9 - (round(($quality / 100) * 9)))]);
-			case 'webp':
-			case 'image/webp':
-				return $this->imageResource->writeToBuffer('.webp', ['Q' => $quality]);
-			case 'avif':
-			case 'image/avif':
-				return $this->imageResource->writeToBuffer('.avif', ['Q' => $quality]);
-			case 'bmp':
-			case 'image/bmp':
-				return $this->imageResource->writeToBuffer('.bmp');
-			case 'tif':
-			case 'tiff':
-			case 'image/tiff':
-				return $this->imageResource->writeToBuffer('.tif', ['Q' => $quality]);
-			default:
-				throw new ImageException(sprintf('Unsupported image type [ %s ].', $type));
-		}
+		return $this->imageResource->writeToBuffer($suffix, $options);
 	}
 
 	/**
@@ -209,35 +183,9 @@ class Vips extends Image
 	#[Override]
 	protected function saveImageResource(string $imagePath, int $quality): void
 	{
-		$extension = pathinfo($imagePath, PATHINFO_EXTENSION);
+		[, $options] = $this->getSuffixAndSaveOptions(pathinfo($imagePath, PATHINFO_EXTENSION), $quality);
 
-		switch (strtolower($extension)) {
-			case 'gif':
-				$this->imageResource->writeToFile($imagePath);
-				break;
-			case 'jpg':
-			case 'jpeg':
-				$this->imageResource->writeToFile($imagePath, ['Q' => $quality]);
-				break;
-			case 'png':
-				$this->imageResource->writeToFile($imagePath, ['compression' => (int) (9 - (round(($quality / 100) * 9)))]);
-				break;
-			case 'webp':
-				$this->imageResource->writeToFile($imagePath, ['Q' => $quality]);
-				break;
-			case 'avif':
-				$this->imageResource->writeToFile($imagePath, ['Q' => $quality]);
-				break;
-			case 'bmp':
-				$this->imageResource->writeToFile($imagePath);
-				break;
-			case 'tif':
-			case 'tiff':
-				$this->imageResource->writeToFile($imagePath, ['Q' => $quality]);
-				break;
-			default:
-				throw new ImageException(sprintf('Unable to save as [ %s ]. Unsupported image format.', $extension));
-		}
+		$this->imageResource->writeToFile($imagePath, $options);
 	}
 
 	/**

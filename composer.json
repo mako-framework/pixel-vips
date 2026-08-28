@@ -22,6 +22,7 @@
     },
     "require": {
         "php": ">=8.5.0",
+        "ext-fileinfo": "*",
         "jcupitt/vips": "^2.6"
     },
     "require-dev": {
