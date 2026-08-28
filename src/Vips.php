@@ -21,6 +21,7 @@ use function pathinfo;
 use function round;
 use function sprintf;
 use function stream_get_contents;
+use function strstr;
 use function strtolower;
 
 /**
@@ -34,11 +35,6 @@ class Vips extends Image
 	 * Access mode.
 	 */
 	protected static AccessMode $access = AccessMode::Random;
-
-	/**
-	 * File info.
-	 */
-	protected static ?finfo $finfo = null;
 
 	/**
 	 * {@inheritDoc}
@@ -72,11 +68,33 @@ class Vips extends Image
 	}
 
 	/**
-	 * Get finfo instance.
+	 * Detects the mime type of the image.
+	 *
+	 * Uses the vips loader where possible and falls back to finfo for
+	 * ambiguous loaders such as magickload, heifload and openslideload.
 	 */
-	protected static function getFinfo(): finfo
+	protected function detectMimeType(VipsImage $imageResource, string $source, bool $isBlob): void
 	{
-		return static::$finfo ??= new finfo(FILEINFO_MIME_TYPE);
+		$type = match (strstr($imageResource->get('vips-loader'), 'load', true)) {
+			'gif'   => 'gif',
+			'jp2k'  => 'jp2',
+			'jpeg'  => 'jpeg',
+			'jxl'   => 'jxl',
+			'png'   => 'png',
+			'tiff'  => 'tiff',
+			'webp'  => 'webp',
+			default => null,
+		};
+
+		if ($type !== null) {
+			$this->mimeType = $this->normalizeMimeType($type);
+
+			return;
+		}
+
+		$finfo = new finfo(FILEINFO_MIME_TYPE);
+
+		$this->mimeType = $isBlob ? $finfo->buffer($source) : $finfo->file($source);
 	}
 
 	/**
@@ -94,7 +112,7 @@ class Vips extends Image
 			throw new ImageException(sprintf('Unable to process the image [ %s ].', $imagePath), previous: $e);
 		}
 
-		$this->mimeType = $this->normalizeMimeType(static::getFinfo()->file($imagePath));
+		$this->detectMimeType($imageResource, $imagePath, false);
 
 		return $imageResource;
 	}
@@ -112,7 +130,7 @@ class Vips extends Image
 			throw new ImageException('Unable to process the image.', previous: $e);
 		}
 
-		$this->mimeType = $this->normalizeMimeType(static::getFinfo()->buffer($blob));
+		$this->detectMimeType($imageResource, $blob, true);
 
 		return $imageResource;
 	}
@@ -144,7 +162,7 @@ class Vips extends Image
 	{
 		return match (strtolower($type)) {
 			'avif', 'image/avif'                       => ['.avif', ['Q' => $quality]],
-			'bmp', 'image/bmp'                         => ['.bmp', []],
+			'bmp', 'image/bmp', 'image/x-ms-bmp'       => ['.bmp', []],
 			'gif', 'image/gif'                         => ['.gif', []],
 			'heic', 'heif', 'image/heic', 'image/heif' => ['.heic', ['Q' => $quality]],
 			'jp2', 'image/jp2'                         => ['.jp2', ['Q' => $quality]],
