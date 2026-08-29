@@ -8,22 +8,14 @@
 namespace mako\pixel\image\operations\vips;
 
 use Jcupitt\Vips\Image;
-use mako\pixel\image\operations\OperationInterface;
+use mako\pixel\image\operations\Rotate as RotateOperation;
 use Override;
 
 /**
- * Rotates the image.
+ * {@inheritDoc}
  */
-class Rotate implements OperationInterface
+class Rotate extends RotateOperation
 {
-	/**
-	 * {@inheritDoc}
-	 */
-	public function __construct(
-		protected int $degrees = 0
-	) {
-	}
-
 	/**
 	 * {@inheritDoc}
 	 *

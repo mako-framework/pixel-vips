@@ -7,31 +7,15 @@
 
 namespace mako\pixel\image\operations\vips;
 
-use InvalidArgumentException;
 use Jcupitt\Vips\Image;
-use mako\pixel\image\operations\OperationInterface;
+use mako\pixel\image\operations\Scale as ScaleOperation;
 use Override;
 
 /**
- * Scales the image.
+ * {@inheritDoc}
  */
-class Scale implements OperationInterface
+class Scale extends ScaleOperation
 {
-	/**
-	 * Constructor.
-	 */
-	public function __construct(
-		protected int $percent {
-			set(int $value) {
-				if ($value <= 0) {
-					throw new InvalidArgumentException('Scale percentage must be greater than zero.');
-				}
-				$this->percent = $value;
-			}
-		}
-	) {
-	}
-
 	/**
 	 * {@inheritDoc}
 	 *

@@ -8,24 +8,16 @@
 namespace mako\pixel\image\operations\vips;
 
 use Jcupitt\Vips\Image;
-use mako\pixel\image\operations\OperationInterface;
+use mako\pixel\image\operations\Brightness as BrightnessOperation;
 use mako\pixel\image\operations\traits\NormalizeTrait;
 use Override;
 
 /**
- * Adjusts the image brightness.
+ * {@inheritDoc}
  */
-class Brightness implements OperationInterface
+class Brightness extends BrightnessOperation
 {
 	use NormalizeTrait;
-
-	/**
-	 * Constructor.
-	 */
-	public function __construct(
-		protected int $level = 0
-	) {
-	}
 
 	/**
 	 * {@inheritDoc}

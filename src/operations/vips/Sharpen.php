@@ -8,16 +8,16 @@
 namespace mako\pixel\image\operations\vips;
 
 use Jcupitt\Vips\Image as VipsImage;
-use mako\pixel\image\operations\OperationInterface;
+use mako\pixel\image\operations\Sharpen as SharpenOperation;
 use Override;
 
 use function array_map;
 use function array_sum;
 
 /**
- * Sharpens the image.
+ * {@inheritDoc}
  */
-class Sharpen implements OperationInterface
+class Sharpen extends SharpenOperation
 {
 	/**
 	 * {@inheritDoc}

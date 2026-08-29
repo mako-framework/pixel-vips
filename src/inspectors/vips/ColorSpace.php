@@ -10,15 +10,13 @@ namespace mako\pixel\image\inspectors\vips;
 use Jcupitt\Vips\Image;
 use Jcupitt\Vips\Interpretation;
 use mako\pixel\image\ColorSpace as ColorSpaceEnum;
-use mako\pixel\image\inspectors\InspectorInterface;
+use mako\pixel\image\inspectors\ColorSpace as ColorSpaceInspector;
 use Override;
 
 /**
- * Returns the color space of the image.
- *
- * @implements InspectorInterface<ColorSpaceEnum>
+ * {@inheritDoc}
  */
-class ColorSpace implements InspectorInterface
+class ColorSpace extends ColorSpaceInspector
 {
 	/**
 	 * {@inheritDoc}

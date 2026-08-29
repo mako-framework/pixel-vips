@@ -8,13 +8,13 @@
 namespace mako\pixel\image\operations\vips;
 
 use Jcupitt\Vips\Image;
-use mako\pixel\image\operations\OperationInterface;
+use mako\pixel\image\operations\Invert as InvertOperation;
 use Override;
 
 /**
- * Inverts the colors of the image.
+ * {@inheritDoc}
  */
-class Invert implements OperationInterface
+class Invert extends InvertOperation
 {
 	/**
 	 * {@inheritDoc}

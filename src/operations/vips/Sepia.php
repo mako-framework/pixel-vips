@@ -9,13 +9,13 @@ namespace mako\pixel\image\operations\vips;
 
 use Jcupitt\Vips\Image;
 use Jcupitt\Vips\Interpretation;
-use mako\pixel\image\operations\OperationInterface;
+use mako\pixel\image\operations\Sepia as SepiaOperation;
 use Override;
 
 /**
- * Turns the image into sepia.
+ * {@inheritDoc}
  */
-class Sepia implements OperationInterface
+class Sepia extends SepiaOperation
 {
 	/**
 	 * {@inheritDoc}

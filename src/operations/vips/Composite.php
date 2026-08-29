@@ -10,22 +10,17 @@ namespace mako\pixel\image\operations\vips;
 use Jcupitt\Vips\BlendMode;
 use Jcupitt\Vips\Image;
 use Jcupitt\Vips\Interpretation;
-use mako\pixel\image\geometry\Point;
-use mako\pixel\image\operations\OperationInterface;
+use mako\pixel\image\operations\Composite as CompositeOperation;
 use mako\pixel\image\Vips;
 use Override;
 
 /**
- * Composites an image onto the image at the specified position.
+ * {@inheritDoc}
+ *
+ * @extends CompositeOperation<Vips>
  */
-class Composite implements OperationInterface
+class Composite extends CompositeOperation
 {
-	public function __construct(
-		protected Vips $image,
-		protected Point $position = new Point(0, 0)
-	) {
-	}
-
 	/**
 	 * {@inheritDoc}
 	 *

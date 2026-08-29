@@ -10,28 +10,16 @@ namespace mako\pixel\image\operations\vips;
 use Jcupitt\Vips\BlendMode;
 use Jcupitt\Vips\Image;
 use Jcupitt\Vips\Interpretation;
-use mako\pixel\image\geometry\Point;
-use mako\pixel\image\operations\Font;
-use mako\pixel\image\operations\OperationInterface;
+use mako\pixel\image\operations\Text as TextOperation;
 use Override;
 
 use function htmlspecialchars;
 
 /**
- * Draws text on the image.
+ * {@inheritDoc}
  */
-class Text implements OperationInterface
+class Text extends TextOperation
 {
-	/**
-	 * Constructor.
-	 */
-	public function __construct(
-		protected string $text,
-		protected Font $font,
-		protected Point $position,
-	) {
-	}
-
 	/**
 	 * {@inheritDoc}
 	 *

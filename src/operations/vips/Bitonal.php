@@ -9,13 +9,13 @@ namespace mako\pixel\image\operations\vips;
 
 use Jcupitt\Vips\Image;
 use Jcupitt\Vips\Interpretation;
-use mako\pixel\image\operations\OperationInterface;
+use mako\pixel\image\operations\Bitonal as BitonalOperation;
 use Override;
 
 /**
- * Turns the image into bitonal.
+ * {@inheritDoc}
  */
-class Bitonal implements OperationInterface
+class Bitonal extends BitonalOperation
 {
 	/**
 	 * Luminance threshold.

@@ -9,24 +9,16 @@ namespace mako\pixel\image\operations\vips;
 
 use Jcupitt\Vips\Image;
 use Jcupitt\Vips\Interpretation;
-use mako\pixel\image\operations\OperationInterface;
+use mako\pixel\image\operations\Saturation as SaturationOperation;
 use mako\pixel\image\operations\traits\NormalizeTrait;
 use Override;
 
 /**
- * Adjusts the color saturation.
+ * {@inheritDoc}
  */
-class Saturation implements OperationInterface
+class Saturation extends SaturationOperation
 {
 	use NormalizeTrait;
-
-	/**
-	 * Constructor.
-	 */
-	public function __construct(
-		protected int $level = 0
-	) {
-	}
 
 	/**
 	 * {@inheritDoc}

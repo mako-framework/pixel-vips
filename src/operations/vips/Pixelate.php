@@ -9,24 +9,16 @@ namespace mako\pixel\image\operations\vips;
 
 use Jcupitt\Vips\Image;
 use Jcupitt\Vips\Kernel;
-use mako\pixel\image\operations\OperationInterface;
+use mako\pixel\image\operations\Pixelate as PixelateOperation;
 use Override;
 
 use function max;
 
 /**
- * Pixelates the image.
+ * {@inheritDoc}
  */
-class Pixelate implements OperationInterface
+class Pixelate extends PixelateOperation
 {
-	/**
-	 * Constructor.
-	 */
-	public function __construct(
-		protected int $pixelSize = 10
-	) {
-	}
-
 	/**
 	 * {@inheritDoc}
 	 *

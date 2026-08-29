@@ -11,24 +11,16 @@ use Jcupitt\Vips\Image;
 use Jcupitt\Vips\Interpretation;
 use mako\pixel\image\ColorSpace as ColorSpaceEnum;
 use mako\pixel\image\exceptions\ImageException;
-use mako\pixel\image\operations\OperationInterface;
+use mako\pixel\image\operations\ColorSpace as ColorSpaceOperation;
 use Override;
 
 use function sprintf;
 
 /**
- * Transforms the color space of the image.
+ * {@inheritDoc}
  */
-class ColorSpace implements OperationInterface
+class ColorSpace extends ColorSpaceOperation
 {
-	/**
-	 * Constructor.
-	 */
-	public function __construct(
-		protected ColorSpaceEnum $colorSpace
-	) {
-	}
-
 	/**
 	 * {@inheritDoc}
 	 *

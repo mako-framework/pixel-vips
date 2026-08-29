@@ -10,7 +10,7 @@ namespace mako\pixel\image\inspectors\vips;
 use Jcupitt\Vips\Image;
 use Jcupitt\Vips\Interpretation;
 use mako\pixel\image\Color;
-use mako\pixel\image\inspectors\InspectorInterface;
+use mako\pixel\image\inspectors\TopColors as TopColorsInspector;
 use Override;
 
 use function array_slice;
@@ -20,28 +20,14 @@ use function strlen;
 use function usort;
 
 /**
- * Extracts the dominant colors from an image.
- *
- * Similar colors are grouped together to avoid returning multiple
- * variations of the same color.
- *
- * @implements InspectorInterface<array<int, Color>>
+ * {@inheritDoc}
  */
-class TopColors implements InspectorInterface
+class TopColors extends TopColorsInspector
 {
 	/**
 	 * Maximum number of pixels to sample.
 	 */
 	protected const int MAX_SAMPLE_PIXELS = 65_536;
-
-	/**
-	 * Constructor.
-	 */
-	public function __construct(
-		protected int $limit = 5,
-		protected bool $ignoreTransparent = true
-	) {
-	}
 
 	/**
 	 * {@inheritDoc}

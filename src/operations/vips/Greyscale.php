@@ -9,13 +9,13 @@ namespace mako\pixel\image\operations\vips;
 
 use Jcupitt\Vips\Image;
 use Jcupitt\Vips\Interpretation;
-use mako\pixel\image\operations\OperationInterface;
+use mako\pixel\image\operations\Greyscale as GreyscaleOperation;
 use Override;
 
 /**
- * Turns the image into greyscale.
+ * {@inheritDoc}
  */
-class Greyscale implements OperationInterface
+class Greyscale extends GreyscaleOperation
 {
 	/**
 	 * {@inheritDoc}

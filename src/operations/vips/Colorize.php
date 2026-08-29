@@ -9,23 +9,14 @@ namespace mako\pixel\image\operations\vips;
 
 use Jcupitt\Vips\Image;
 use Jcupitt\Vips\Interpretation;
-use mako\pixel\image\Color;
-use mako\pixel\image\operations\OperationInterface;
+use mako\pixel\image\operations\Colorize as ColorizeOperation;
 use Override;
 
 /**
- * Colorizes the image.
+ * {@inheritDoc}
  */
-class Colorize implements OperationInterface
+class Colorize extends ColorizeOperation
 {
-	/**
-	 * Constructor.
-	 */
-	public function __construct(
-		protected Color $color
-	) {
-	}
-
 	/**
 	 * {@inheritDoc}
 	 *

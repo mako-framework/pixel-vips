@@ -7,40 +7,17 @@
 
 namespace mako\pixel\image\operations\vips;
 
-use InvalidArgumentException;
 use Jcupitt\Vips\Image;
-use mako\pixel\image\Color;
-use mako\pixel\image\geometry\Dimensions;
-use mako\pixel\image\geometry\Point;
-use mako\pixel\image\operations\OperationInterface;
+use mako\pixel\image\operations\Rectangle as RectangleOperation;
 use mako\pixel\image\operations\vips\traits\SvgTrait;
 use Override;
 
 /**
- * Draws a rectangle on the image.
+ * {@inheritDoc}
  */
-class Rectangle implements OperationInterface
+class Rectangle extends RectangleOperation
 {
 	use SvgTrait;
-
-	/**
-	 * Constructor.
-	 */
-	public function __construct(
-		protected Dimensions $dimensions,
-		protected ?Color $fill = null,
-		protected ?Color $stroke = null,
-		protected int $strokeWidth = 1,
-		protected Point $position = new Point(0, 0)
-	) {
-		if ($this->fill === null && $this->stroke === null) {
-			throw new InvalidArgumentException('A rectangle requires a fill, a stroke, or both.');
-		}
-
-		if ($this->stroke !== null && $this->strokeWidth < 1) {
-			throw new InvalidArgumentException('Stroke width must be greater than 0.');
-		}
-	}
 
 	/**
 	 * {@inheritDoc}

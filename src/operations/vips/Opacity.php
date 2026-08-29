@@ -8,21 +8,16 @@
 namespace mako\pixel\image\operations\vips;
 
 use Jcupitt\Vips\Image;
-use mako\pixel\image\operations\OperationInterface;
+use mako\pixel\image\operations\Opacity as OpacityOperation;
 use mako\pixel\image\operations\traits\NormalizeTrait;
 use Override;
 
 /**
- * Adjusts the opacity of the image.
+ * {@inheritDoc}
  */
-class Opacity implements OperationInterface
+class Opacity extends OpacityOperation
 {
 	use NormalizeTrait;
-
-	public function __construct(
-		protected int $opacity
-	) {
-	}
 
 	/**
 	 * {@inheritDoc}

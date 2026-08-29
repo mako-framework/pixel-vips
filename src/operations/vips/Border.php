@@ -8,28 +8,16 @@
 namespace mako\pixel\image\operations\vips;
 
 use Jcupitt\Vips\Image;
-use mako\pixel\image\Color;
-use mako\pixel\image\operations\OperationInterface;
+use mako\pixel\image\operations\Border as BorderOperation;
 use mako\pixel\image\operations\vips\traits\SvgTrait;
 use Override;
 
-use function max;
-
 /**
- * Adds a border to the image.
+ * {@inheritDoc}
  */
-class Border implements OperationInterface
+class Border extends BorderOperation
 {
 	use SvgTrait;
-	/**
-	 * Constructor.
-	 */
-	public function __construct(
-		protected Color $color = new Color(0, 0, 0),
-		protected int $width = 4
-	) {
-		$this->width = max(0, $this->width);
-	}
 
 	/**
 	 * {@inheritDoc}

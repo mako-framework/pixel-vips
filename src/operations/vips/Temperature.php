@@ -9,24 +9,16 @@ namespace mako\pixel\image\operations\vips;
 
 use Jcupitt\Vips\Image;
 use Jcupitt\Vips\Interpretation;
-use mako\pixel\image\operations\OperationInterface;
+use mako\pixel\image\operations\Temperature as TemperatureOperation;
 use mako\pixel\image\operations\traits\NormalizeTrait;
 use Override;
 
 /**
- * Adjusts the image color temperature.
+ * {@inheritDoc}
  */
-class Temperature implements OperationInterface
+class Temperature extends TemperatureOperation
 {
 	use NormalizeTrait;
-
-	/**
-	 * Constructor.
-	 */
-	public function __construct(
-		protected int $level = 0
-	) {
-	}
 
 	/**
 	 * {@inheritDoc}

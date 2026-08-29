@@ -9,23 +9,15 @@ namespace mako\pixel\image\operations\vips;
 
 use Jcupitt\Vips\Direction;
 use Jcupitt\Vips\Image;
-use mako\pixel\image\operations\Flip as FlipDirection;
-use mako\pixel\image\operations\OperationInterface;
+use mako\pixel\image\operations\Flip as FlipOperation;
+use mako\pixel\image\operations\FlipDirection;
 use Override;
 
 /**
- * Flips the image.
+ * {@inheritDoc}
  */
-class Flip implements OperationInterface
+class Flip extends FlipOperation
 {
-	/**
-	 * Constructor.
-	 */
-	public function __construct(
-		protected FlipDirection $direction = FlipDirection::Horizontal
-	) {
-	}
-
 	/**
 	 * {@inheritDoc}
 	 *

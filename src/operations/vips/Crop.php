@@ -8,27 +8,16 @@
 namespace mako\pixel\image\operations\vips;
 
 use Jcupitt\Vips\Image;
-use mako\pixel\image\geometry\Dimensions;
-use mako\pixel\image\geometry\Point;
-use mako\pixel\image\operations\OperationInterface;
+use mako\pixel\image\operations\Crop as CropOperation;
 use Override;
 
 use function min;
 
 /**
- * Crops the image.
+ * {@inheritDoc}
  */
-class Crop implements OperationInterface
+class Crop extends CropOperation
 {
-	/**
-	 * Constructor.
-	 */
-	public function __construct(
-		protected Dimensions $dimensions,
-		protected Point $position
-	) {
-	}
-
 	/**
 	 * {@inheritDoc}
 	 *

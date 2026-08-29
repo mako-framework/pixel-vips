@@ -9,30 +9,17 @@ namespace mako\pixel\image\operations\vips;
 
 use Jcupitt\Vips\Image;
 use mako\pixel\image\geometry\Dimensions;
-use mako\pixel\image\operations\OperationInterface;
-use mako\pixel\image\operations\WatermarkPosition;
+use mako\pixel\image\operations\Watermark as WatermarkOperation;
 use mako\pixel\image\Vips;
 use Override;
 
 /**
- * Adds a watermark to the image.
+ * {@inheritDoc}
+ *
+ * @extends WatermarkOperation<Vips>
  */
-class Watermark implements OperationInterface
+class Watermark extends WatermarkOperation
 {
-	/**
-	 * Constructor.
-	 */
-	public function __construct(
-		protected string|Vips $image,
-		protected WatermarkPosition $position = WatermarkPosition::BottomRight,
-		protected int $opacity = 100,
-		protected int $margin = 0
-	) {
-		if ($image instanceof Vips === false) {
-			$this->image = new Vips($image);
-		}
-	}
-
 	/**
 	 * {@inheritDoc}
 	 *

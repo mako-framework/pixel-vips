@@ -9,14 +9,13 @@ namespace mako\pixel\image\operations\vips;
 
 use Jcupitt\Vips\Image;
 use Jcupitt\Vips\Interpretation;
-use mako\pixel\image\operations\Pipeline;
+use mako\pixel\image\operations\SrgbPipeline as SrgbPipelineOperation;
 use Override;
 
 /**
- * Temporarily converts the image to sRGB while applying the pipelined operations,
- * then restores the original color space.
+ * {@inheritDoc}
  */
-class SrgbPipeline extends Pipeline
+class SrgbPipeline extends SrgbPipelineOperation
 {
 	/**
 	 * {@inheritDoc}

@@ -8,7 +8,7 @@
 namespace mako\pixel\image\operations\vips;
 
 use Jcupitt\Vips\Image as VipsImage;
-use mako\pixel\image\operations\OperationInterface;
+use mako\pixel\image\operations\Contrast as ContrastOperation;
 use mako\pixel\image\operations\traits\NormalizeTrait;
 use Override;
 
@@ -16,19 +16,11 @@ use function array_fill;
 use function tan;
 
 /**
- * Adjusts the image contrast.
+ * {@inheritDoc}
  */
-class Contrast implements OperationInterface
+class Contrast extends ContrastOperation
 {
 	use NormalizeTrait;
-
-	/**
-	 * Constructor.
-	 */
-	public function __construct(
-		protected int $level = 0
-	) {
-	}
 
 	/**
 	 * {@inheritDoc}

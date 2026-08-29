@@ -9,8 +9,7 @@ namespace mako\pixel\image\operations\vips;
 
 use Jcupitt\Vips\Image;
 use Jcupitt\Vips\Interpretation;
-use mako\pixel\image\Color;
-use mako\pixel\image\operations\OperationInterface;
+use mako\pixel\image\operations\ReplaceColor as ReplaceColorOperation;
 use Override;
 
 use function array_shift;
@@ -18,21 +17,10 @@ use function max;
 use function min;
 
 /**
- * Replaces pixels matching a specified color with another color.
+ * {@inheritDoc}
  */
-class ReplaceColor implements OperationInterface
+class ReplaceColor extends ReplaceColorOperation
 {
-	/**
-	 * Constructor.
-	 */
-	public function __construct(
-		protected Color $from,
-		protected Color $to,
-		protected int $tolerance = 0,
-		protected bool $invertMatch = false
-	) {
-	}
-
 	/**
 	 * Converts tolerance percentage (0-100) to 8-bit channel range (0-255).
 	 */

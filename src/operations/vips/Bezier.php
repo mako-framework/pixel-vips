@@ -7,12 +7,8 @@
 
 namespace mako\pixel\image\operations\vips;
 
-use InvalidArgumentException;
 use Jcupitt\Vips\Image;
-use mako\pixel\image\Color;
-use mako\pixel\image\geometry\Point;
-use mako\pixel\image\geometry\Points;
-use mako\pixel\image\operations\OperationInterface;
+use mako\pixel\image\operations\Bezier as BezierOperation;
 use mako\pixel\image\operations\vips\traits\SvgTrait;
 use Override;
 
@@ -21,9 +17,9 @@ use function implode;
 use function sprintf;
 
 /**
- * Draws a Bézier curve on the image.
+ * {@inheritDoc}
  */
-class Bezier implements OperationInterface
+class Bezier extends BezierOperation
 {
 	use SvgTrait;
 
@@ -31,24 +27,6 @@ class Bezier implements OperationInterface
 	 * Number of line segments used to approximate higher-order curves.
 	 */
 	protected const int SEGMENTS = 100;
-
-	/**
-	 * Constructor.
-	 */
-	public function __construct(
-		protected Points $points,
-		protected Color $stroke,
-		protected int $strokeWidth = 1,
-		protected Point $position = new Point(0, 0)
-	) {
-		if (count($points) < 2) {
-			throw new InvalidArgumentException('A Bézier curve requires at least 2 points.');
-		}
-
-		if ($this->strokeWidth < 1) {
-			throw new InvalidArgumentException('Stroke width must be greater than 0.');
-		}
-	}
 
 	/**
 	 * Calculates a point on the Bézier curve at position t using De Casteljau's algorithm.
