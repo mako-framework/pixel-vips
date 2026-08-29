@@ -3,7 +3,7 @@
 [![Tests](https://github.com/mako-framework/pixel-vips/actions/workflows/tests.yml/badge.svg)](https://github.com/mako-framework/pixel-vips/actions/workflows/tests.yml)
 [![Static analysis](https://github.com/mako-framework/pixel-vips/actions/workflows/static-analysis.yml/badge.svg)](https://github.com/mako-framework/pixel-vips/actions/workflows/static-analysis.yml)
 
-A [libvips](https://www.libvips.org/) driver for the Mako pixel image processing library.
+A [libvips](https://www.libvips.org/) implementation for the Mako pixel image processing library.
 
 The package provides a high-performance libvips backend for common image transformation and processing tasks, while integrating with Pixel's shared API for images, colors, geometry, operations, and inspectors.
 
@@ -40,9 +40,15 @@ composer require mako/pixel-vips
 
 ## Usage
 
-The Vips driver works just like the GD and ImageMagick drivers and shares the exact same API.
+The Vips implementation works just like the GD and ImageMagick implementations and shares the exact same API.
 
 ```php
+use mako\pixel\image\Color;
+use mako\pixel\image\operations\Pipeline;
+use mako\pixel\image\operations\vips\Border;
+use mako\pixel\image\operations\vips\Sharpen;
+use mako\pixel\image\Vips;
+
 $image = new Vips('image.png');
 
 $image->apply(new Pipeline(
