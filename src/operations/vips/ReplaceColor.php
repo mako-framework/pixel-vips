@@ -7,6 +7,7 @@
 
 namespace mako\pixel\image\operations\vips;
 
+use Jcupitt\Vips\BandFormat;
 use Jcupitt\Vips\Image;
 use Jcupitt\Vips\Interpretation;
 use mako\pixel\image\operations\ReplaceColor as ReplaceColorOperation;
@@ -71,6 +72,6 @@ class ReplaceColor extends ReplaceColorOperation
 
 		$imageResource = $mask
 		->ifthenelse([$this->to->red, $this->to->green, $this->to->blue, $this->to->alpha], $imageResource)
-		->cast('uchar');
+		->cast(BandFormat::UCHAR);
 	}
 }

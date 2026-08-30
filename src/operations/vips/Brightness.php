@@ -7,6 +7,7 @@
 
 namespace mako\pixel\image\operations\vips;
 
+use Jcupitt\Vips\BandFormat;
 use Jcupitt\Vips\Image;
 use mako\pixel\image\operations\Brightness as BrightnessOperation;
 use Override;
@@ -40,7 +41,7 @@ class Brightness extends BrightnessOperation
 
 		$offset = $this->level / 100 * 255;
 
-		$imageResource = $imageResource->linear(1, $offset)->cast('uchar');
+		$imageResource = $imageResource->linear(1, $offset)->cast(BandFormat::UCHAR);
 
 		if ($alpha !== null) {
 			$imageResource = $imageResource->bandjoin($alpha);

@@ -7,6 +7,7 @@
 
 namespace mako\pixel\image\inspectors\vips;
 
+use Jcupitt\Vips\BandFormat;
 use Jcupitt\Vips\Image;
 use Jcupitt\Vips\Interpretation;
 use mako\pixel\image\Color;
@@ -54,7 +55,7 @@ class TopColors extends TopColorsInspector
 		// Extract the raw RGBA bytes and group similar colors by quantizing
 		// each RGB channel to its two most significant bits
 
-		$bytes = $image->cast('uchar')->writeToMemory();
+		$bytes = $image->cast(BandFormat::UCHAR)->writeToMemory();
 
 		$length = strlen($bytes);
 

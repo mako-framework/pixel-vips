@@ -7,6 +7,7 @@
 
 namespace mako\pixel\image\operations\vips;
 
+use Jcupitt\Vips\BandFormat;
 use Jcupitt\Vips\BlendMode;
 use Jcupitt\Vips\Image;
 use Jcupitt\Vips\Interpretation;
@@ -42,7 +43,7 @@ class Text extends TextOperation
 		$text = $mask
 		->newFromImage([$color->red, $color->green, $color->blue])
 		->bandjoin($mask->multiply($color->alpha / 255))
-		->cast('uchar')
+		->cast(BandFormat::UCHAR)
 		->copy(['interpretation' => Interpretation::SRGB]);
 
 		if (!$imageResource->hasAlpha()) {

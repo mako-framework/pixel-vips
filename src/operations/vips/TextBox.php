@@ -8,6 +8,7 @@
 namespace mako\pixel\image\operations\vips;
 
 use Jcupitt\Vips\Align;
+use Jcupitt\Vips\BandFormat;
 use Jcupitt\Vips\BlendMode;
 use Jcupitt\Vips\Image;
 use mako\pixel\image\operations\TextBox as TextBoxOperation;
@@ -73,7 +74,7 @@ class TextBox extends TextBoxOperation
 		$x = $this->position->x + (int) (($this->dimensions->width - $mask->width) / 2);
 		$y = $this->position->y + (int) (($this->dimensions->height - $mask->height) / 2);
 
-		return $imageResource->composite2($text->cast('uchar'), BlendMode::OVER, ['x' => $x, 'y' => $y]);
+		return $imageResource->composite2($text->cast(BandFormat::UCHAR), BlendMode::OVER, ['x' => $x, 'y' => $y]);
 	}
 
 	/**

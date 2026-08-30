@@ -7,6 +7,7 @@
 
 namespace mako\pixel\image\operations\vips;
 
+use Jcupitt\Vips\BandFormat;
 use Jcupitt\Vips\Image as VipsImage;
 use mako\pixel\image\operations\Gamma as GammaOperation;
 use Override;
@@ -29,10 +30,16 @@ class Gamma extends GammaOperation
 		}
 
 		if (!$imageResource->hasAlpha()) {
-			$imageResource = $imageResource->gamma(['exponent' => $this->gamma]);
+			$imageResource = $imageResource
+			->cast(BandFormat::UCHAR)
+			->gamma(['exponent' => $this->gamma]);
 
 			return;
 		}
+
+		$imageResource = $imageResource
+		->unpremultiply()
+		->cast(BandFormat::UCHAR);
 
 		$bands = $imageResource->bands - 1;
 

@@ -7,6 +7,7 @@
 
 namespace mako\pixel\image\operations\vips;
 
+use Jcupitt\Vips\BandFormat;
 use Jcupitt\Vips\Image;
 use Jcupitt\Vips\Interpretation;
 use mako\pixel\image\operations\Pixel as PixelOperation;
@@ -36,7 +37,7 @@ class Pixel extends PixelOperation
 
 		$pixel = Image::black(1, 1)
 		->add([$this->color->red, $this->color->green, $this->color->blue, $this->color->alpha])
-		->cast('uchar')
+		->cast(BandFormat::UCHAR)
 		->copy(['interpretation' => Interpretation::SRGB]);
 
 		$imageResource = $imageResource->insert($pixel, $this->pixel->x, $this->pixel->y);

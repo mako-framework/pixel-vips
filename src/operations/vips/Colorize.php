@@ -7,6 +7,7 @@
 
 namespace mako\pixel\image\operations\vips;
 
+use Jcupitt\Vips\BandFormat;
 use Jcupitt\Vips\Image;
 use Jcupitt\Vips\Interpretation;
 use mako\pixel\image\operations\Colorize as ColorizeOperation;
@@ -39,7 +40,7 @@ class Colorize extends ColorizeOperation
 
 		$imageResource = $imageResource
 		->linear([1, 1, 1], [$this->color->red, $this->color->green, $this->color->blue])
-		->cast('uchar');
+		->cast(BandFormat::UCHAR);
 
 		if ($alpha !== null) {
 			$imageResource = $imageResource->bandjoin($alpha);

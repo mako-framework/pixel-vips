@@ -7,6 +7,7 @@
 
 namespace mako\pixel\image\operations\vips;
 
+use Jcupitt\Vips\BandFormat;
 use Jcupitt\Vips\Image;
 use Jcupitt\Vips\Interpretation;
 use mako\pixel\image\operations\Saturation as SaturationOperation;
@@ -47,7 +48,7 @@ class Saturation extends SaturationOperation
 		->colourspace(Interpretation::LCH)
 		->linear([1, $multiplier, 1], [0, 0, 0])
 		->colourspace(Interpretation::SRGB)
-		->cast('uchar');
+		->cast(BandFormat::UCHAR);
 
 		if ($alpha !== null) {
 			$imageResource = $imageResource->bandjoin($alpha);

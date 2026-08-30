@@ -7,6 +7,7 @@
 
 namespace mako\pixel\image\operations\vips;
 
+use Jcupitt\Vips\BandFormat;
 use Jcupitt\Vips\Image;
 use Jcupitt\Vips\Interpretation;
 use mako\pixel\image\operations\Temperature as TemperatureOperation;
@@ -45,7 +46,7 @@ class Temperature extends TemperatureOperation
 
 		$imageResource = $imageResource
 		->linear([1 + $shift, 1, 1 - $shift], [0, 0, 0])
-		->cast('uchar');
+		->cast(BandFormat::UCHAR);
 
 		if ($alpha !== null) {
 			$imageResource = $imageResource->bandjoin($alpha);

@@ -7,6 +7,7 @@
 
 namespace mako\pixel\image\operations\vips;
 
+use Jcupitt\Vips\BandFormat;
 use Jcupitt\Vips\Image;
 use Jcupitt\Vips\Interpretation;
 use mako\pixel\image\operations\Sepia as SepiaOperation;
@@ -41,7 +42,7 @@ class Sepia extends SepiaOperation
 			[0.272 * 0.85, 0.534 * 0.85, 0.131 * 0.85],
 		]);
 
-		$imageResource = $imageResource->recomb($matrix)->cast('uchar');
+		$imageResource = $imageResource->recomb($matrix)->cast(BandFormat::UCHAR);
 
 		if ($alpha !== null) {
 			$imageResource = $imageResource->bandjoin($alpha);

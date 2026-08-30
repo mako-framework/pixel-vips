@@ -8,6 +8,7 @@
 namespace mako\pixel\image;
 
 use finfo;
+use Jcupitt\Vips\BandFormat;
 use Jcupitt\Vips\Exception as VipsException;
 use Jcupitt\Vips\Image as VipsImage;
 use Jcupitt\Vips\Interpretation;
@@ -63,7 +64,7 @@ class Vips extends Image
 			$fill->blue,
 			$fill->alpha,
 		])
-		->cast('uchar')
+		->cast(BandFormat::UCHAR)
 		->copy(['interpretation' => Interpretation::SRGB]);
 	}
 
