@@ -28,17 +28,15 @@ class Gamma extends GammaOperation
 			return;
 		}
 
-		$exponent = 1.0 / ($this->gamma * 1.18);
-
 		if (!$imageResource->hasAlpha()) {
-			$imageResource = $imageResource->gamma(['exponent' => $exponent]);
+			$imageResource = $imageResource->gamma(['exponent' => $this->gamma]);
 
 			return;
 		}
 
 		$bands = $imageResource->bands - 1;
 
-		$color = $imageResource->extract_band(0, ['n' => $bands])->gamma(['exponent' => $exponent]);
+		$color = $imageResource->extract_band(0, ['n' => $bands])->gamma(['exponent' => $this->gamma]);
 
 		$alpha = $imageResource->extract_band($bands);
 
