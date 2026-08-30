@@ -10,6 +10,7 @@ namespace mako\pixel\image\inspectors\vips;
 use Jcupitt\Vips\BandFormat;
 use Jcupitt\Vips\Image;
 use Jcupitt\Vips\Interpretation;
+use Jcupitt\Vips\Kernel;
 use mako\pixel\image\Color;
 use mako\pixel\image\inspectors\TopColors as TopColorsInspector;
 use Override;
@@ -49,7 +50,7 @@ class TopColors extends TopColorsInspector
 		$pixels = $image->width * $image->height;
 
 		if ($pixels > static::MAX_SAMPLE_PIXELS) {
-			$image = $image->resize(sqrt(static::MAX_SAMPLE_PIXELS / $pixels), ['kernel' => 'nearest']);
+			$image = $image->resize(sqrt(static::MAX_SAMPLE_PIXELS / $pixels), ['kernel' => Kernel::NEAREST]);
 		}
 
 		// Extract the raw RGBA bytes and group similar colors by quantizing

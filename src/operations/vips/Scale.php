@@ -8,6 +8,7 @@
 namespace mako\pixel\image\operations\vips;
 
 use Jcupitt\Vips\Image;
+use Jcupitt\Vips\Kernel;
 use mako\pixel\image\operations\Scale as ScaleOperation;
 use Override;
 
@@ -30,7 +31,7 @@ class Scale extends ScaleOperation
 
 		$imageResource = $imageResource->resize(
 			$this->percent / 100,
-			['kernel' => 'nearest']
+			['kernel' => Kernel::NEAREST]
 		);
 	}
 }

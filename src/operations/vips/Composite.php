@@ -29,13 +29,13 @@ class Composite extends CompositeOperation
 	#[Override]
 	public function apply(object &$imageResource): void
 	{
-		if ($imageResource->interpretation === 'multiband') {
+		if ($imageResource->interpretation === Interpretation::MULTIBAND) {
 			$imageResource = $imageResource->colourspace(Interpretation::SRGB);
 		}
 
 		$composite = $this->image->getImageResource();
 
-		if ($composite->interpretation === 'multiband') {
+		if ($composite->interpretation === Interpretation::MULTIBAND) {
 			$composite = $composite->colourspace(Interpretation::SRGB);
 		}
 

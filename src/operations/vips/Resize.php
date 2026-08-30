@@ -8,6 +8,7 @@
 namespace mako\pixel\image\operations\vips;
 
 use Jcupitt\Vips\Image;
+use Jcupitt\Vips\Kernel;
 use mako\pixel\image\operations\Resize as ResizeOperation;
 use mako\pixel\image\operations\traits\ResizeTrait;
 use Override;
@@ -43,7 +44,7 @@ class Resize extends ResizeOperation
 
 		$imageResource = $imageResource->resize(
 			$hScale,
-			['vscale' => $vScale, 'kernel' => 'nearest']
+			['vscale' => $vScale, 'kernel' => Kernel::NEAREST]
 		);
 	}
 }

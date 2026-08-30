@@ -7,6 +7,7 @@
 
 namespace mako\pixel\image\operations\vips;
 
+use Jcupitt\Vips\Extend;
 use Jcupitt\Vips\Image;
 use Jcupitt\Vips\Kernel;
 use mako\pixel\image\operations\Pixelate as PixelateOperation;
@@ -40,7 +41,7 @@ class Pixelate extends PixelateOperation
 
 		if ($imageResource->width !== $width || $imageResource->height !== $height) {
 			$imageResource = $imageResource
-			->embed(0, 0, $width, $height, ['extend' => 'copy']);
+			->embed(0, 0, $width, $height, ['extend' => Extend::COPY]);
 		}
 	}
 }
