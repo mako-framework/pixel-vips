@@ -15,7 +15,6 @@ use Override;
 
 use function array_shift;
 use function max;
-use function min;
 
 /**
  * {@inheritDoc}
@@ -27,9 +26,7 @@ class ReplaceColor extends ReplaceColorOperation
 	 */
 	protected function normalizeTolerance(): float
 	{
-		$tolerance = max(0, min(100, $this->tolerance));
-
-		return ($tolerance / 100) * 255.0;
+		return ($this->tolerance / 100) * 255.0;
 	}
 
 	/**
