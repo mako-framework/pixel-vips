@@ -9,7 +9,6 @@ namespace mako\pixel\image\operations\vips;
 
 use Jcupitt\Vips\Image;
 use mako\pixel\image\operations\Opacity as OpacityOperation;
-use mako\pixel\image\operations\traits\NormalizeTrait;
 use Override;
 
 /**
@@ -17,8 +16,6 @@ use Override;
  */
 class Opacity extends OpacityOperation
 {
-	use NormalizeTrait;
-
 	/**
 	 * {@inheritDoc}
 	 *
@@ -33,7 +30,7 @@ class Opacity extends OpacityOperation
 
 		$bands = $imageResource->bands;
 
-		$factor = $this->normalizePercent($this->opacity) / 100;
+		$factor = $this->opacity / 100;
 
 		$colorBands = $imageResource->extract_band(0, ['n' => $bands - 1]);
 

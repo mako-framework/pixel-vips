@@ -9,7 +9,6 @@ namespace mako\pixel\image\operations\vips;
 
 use Jcupitt\Vips\Image;
 use mako\pixel\image\operations\Brightness as BrightnessOperation;
-use mako\pixel\image\operations\traits\NormalizeTrait;
 use Override;
 
 /**
@@ -17,8 +16,6 @@ use Override;
  */
 class Brightness extends BrightnessOperation
 {
-	use NormalizeTrait;
-
 	/**
 	 * {@inheritDoc}
 	 *
@@ -41,7 +38,7 @@ class Brightness extends BrightnessOperation
 
 		// Map the normalized level (-100 to 100) to an offset of -255 to 255
 
-		$offset = $this->normalizeLevel($this->level) / 100 * 255;
+		$offset = $this->level / 100 * 255;
 
 		$imageResource = $imageResource->linear(1, $offset)->cast('uchar');
 

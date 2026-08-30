@@ -10,7 +10,6 @@ namespace mako\pixel\image\operations\vips;
 use Jcupitt\Vips\Image;
 use Jcupitt\Vips\Interpretation;
 use mako\pixel\image\operations\Temperature as TemperatureOperation;
-use mako\pixel\image\operations\traits\NormalizeTrait;
 use Override;
 
 /**
@@ -18,8 +17,6 @@ use Override;
  */
 class Temperature extends TemperatureOperation
 {
-	use NormalizeTrait;
-
 	/**
 	 * {@inheritDoc}
 	 *
@@ -42,7 +39,7 @@ class Temperature extends TemperatureOperation
 			$imageResource = $imageResource->extract_band(0, ['n' => $imageResource->bands - 1]);
 		}
 
-		$shift = $this->normalizeLevel($this->level) * 0.0022;
+		$shift = $this->level * 0.0022;
 
 		// Warm: boost red, reduce blue - Cool: the opposite
 

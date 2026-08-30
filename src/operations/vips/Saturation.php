@@ -10,7 +10,6 @@ namespace mako\pixel\image\operations\vips;
 use Jcupitt\Vips\Image;
 use Jcupitt\Vips\Interpretation;
 use mako\pixel\image\operations\Saturation as SaturationOperation;
-use mako\pixel\image\operations\traits\NormalizeTrait;
 use Override;
 
 /**
@@ -18,8 +17,6 @@ use Override;
  */
 class Saturation extends SaturationOperation
 {
-	use NormalizeTrait;
-
 	/**
 	 * {@inheritDoc}
 	 *
@@ -34,7 +31,7 @@ class Saturation extends SaturationOperation
 
 		// Map the normalized level (-100 to 100) to a chroma multiplier (0 to 2)
 
-		$multiplier = (100 + $this->normalizeLevel($this->level)) / 100;
+		$multiplier = (100 + $this->level) / 100;
 
 		$alpha = null;
 
