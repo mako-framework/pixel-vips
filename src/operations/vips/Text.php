@@ -34,8 +34,9 @@ class Text extends TextOperation
 		// Render the text as an alpha mask
 
 		$mask = Image::text(htmlspecialchars($this->text), [
+			'font'     => "{$this->font->name} {$this->font->size}",
 			'fontfile' => $this->font->path,
-			'dpi' => (int) ($this->font->size * 72 / 10),
+			'dpi'      => 72,
 		]);
 
 		// Colorize the mask: RGB from the font color, alpha from the mask scaled by the color alpha

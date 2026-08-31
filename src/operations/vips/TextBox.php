@@ -52,11 +52,12 @@ class TextBox extends TextBoxOperation
 		// Render the text as a centered, multi-line alpha mask
 
 		$mask = Image::text(htmlspecialchars($this->text), [
+			'font'     => "{$this->font->name} {$this->font->size}",
 			'fontfile' => $this->font->path,
-			'dpi' => (int) ($this->font->size * 72 / 10),
-			'align' => Align::CENTRE,
-			'width' => $this->dimensions->width,
-			'rgba' => true,
+			'dpi'      => 72,
+			'align'    => Align::CENTRE,
+			'width'    => $this->dimensions->width,
+			'rgba'     => true,
 		]);
 
 		// Colorize the mask using the font color
