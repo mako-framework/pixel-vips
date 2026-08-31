@@ -32,6 +32,8 @@ use function strtolower;
 /**
  * Vips.
  *
+ * @see https://github.com/libvips/php-vips
+ *
  * @extends Image<VipsImage>
  */
 class Vips extends Image
