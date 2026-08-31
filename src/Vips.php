@@ -14,10 +14,13 @@ use Jcupitt\Vips\Image as VipsImage;
 use Jcupitt\Vips\Interpretation;
 use mako\pixel\image\exceptions\ImageException;
 use mako\pixel\image\geometry\Dimensions;
+use mako\pixel\image\operations\OperationInterface;
 use mako\pixel\image\vips\AccessMode;
 use Override;
 
 use function fwrite;
+use function in_array;
+use function intdiv;
 use function pathinfo;
 use function round;
 use function sprintf;
@@ -36,6 +39,11 @@ class Vips extends Image
 	 * Access mode.
 	 */
 	protected static AccessMode $access = AccessMode::Random;
+
+	/**
+	 * Is the image animated?
+	 */
+	protected bool $isAnimated = false;
 
 	/**
 	 * {@inheritDoc}
@@ -69,6 +77,31 @@ class Vips extends Image
 	}
 
 	/**
+	 * Returns the load options for the specified vips loader.
+	 *
+	 * The "n" option is only supported by loaders that support paged
+	 * (potentially animated) images.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function getLoadOptions(?string $loader): array
+	{
+		$options = ['access' => static::$access->value];
+
+		if (in_array($loader, [
+			'VipsForeignLoadGifFile', 'VipsForeignLoadGifBuffer',
+			'VipsForeignLoadNsgifFile', 'VipsForeignLoadNsgifBuffer',
+			'VipsForeignLoadWebpFile', 'VipsForeignLoadWebpBuffer',
+			'VipsForeignLoadTiffFile', 'VipsForeignLoadTiffBuffer',
+			'VipsForeignLoadHeifFile', 'VipsForeignLoadHeifBuffer',
+		], true)) {
+			$options['n'] = -1;
+		}
+
+		return $options;
+	}
+
+	/**
 	 * Detects the mime type of the image.
 	 *
 	 * Uses the vips loader where possible and falls back to finfo for
@@ -99,6 +132,19 @@ class Vips extends Image
 	}
 
 	/**
+	 * Detects whether the image is animated.
+	 */
+	protected function detectAnimation(VipsImage $imageResource): void
+	{
+		$this->isAnimated = $imageResource->getType('page-height') !== 0
+			&& $imageResource->get('page-height') < $imageResource->height;
+
+		if ($this->isAnimated && static::$access === AccessMode::Sequential) {
+			throw new ImageException('Animated images require the random access mode.');
+		}
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	#[Override]
@@ -107,13 +153,17 @@ class Vips extends Image
 		$this->imagePath = $imagePath;
 
 		try {
-			$imageResource = VipsImage::newFromFile($imagePath, ['access' => static::$access->value]);
+			$imageResource = VipsImage::newFromFile(
+				$imagePath,
+				$this->getLoadOptions(VipsImage::findLoad($imagePath))
+			);
 		}
 		catch (VipsException $e) {
 			throw new ImageException(sprintf('Unable to process the image [ %s ].', $imagePath), previous: $e);
 		}
 
 		$this->detectMimeType($imageResource, $imagePath, false);
+		$this->detectAnimation($imageResource);
 
 		return $imageResource;
 	}
@@ -125,13 +175,17 @@ class Vips extends Image
 	protected function createImageResourceFromBlob(string $blob): object
 	{
 		try {
-			$imageResource = VipsImage::newFromBuffer($blob, options: ['access' => static::$access->value]);
+			$imageResource = VipsImage::newFromBuffer(
+				$blob,
+				options: $this->getLoadOptions(VipsImage::findLoadBuffer($blob))
+			);
 		}
 		catch (VipsException $e) {
 			throw new ImageException('Unable to process the image.', previous: $e);
 		}
 
 		$this->detectMimeType($imageResource, $blob, true);
+		$this->detectAnimation($imageResource);
 
 		return $imageResource;
 	}
@@ -177,6 +231,34 @@ class Vips extends Image
 	}
 
 	/**
+	 * Returns true if the specified vips file suffix supports animation and false if not.
+	 */
+	protected function suffixSupportsAnimation(string $suffix): bool
+	{
+		return $suffix === '.gif' || $suffix === '.webp';
+	}
+
+	/**
+	 * Returns the image resource prepared for saving with the specified suffix.
+	 *
+	 * Animated images are reduced to their first frame when saving
+	 * to a format that doesn't support animation.
+	 */
+	protected function getSaveableImageResource(string $suffix): VipsImage
+	{
+		if ($this->isAnimated && !$this->suffixSupportsAnimation($suffix)) {
+			return $this->imageResource->crop(
+				0,
+				0,
+				$this->imageResource->width,
+				$this->imageResource->get('page-height')
+			);
+		}
+
+		return $this->imageResource;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	#[Override]
@@ -184,7 +266,7 @@ class Vips extends Image
 	{
 		[$suffix, $options] = $this->getSuffixAndSaveOptions($type ?? $this->mimeType, $quality);
 
-		return $this->imageResource->writeToBuffer($suffix, $options);
+		return $this->getSaveableImageResource($suffix)->writeToBuffer($suffix, $options);
 	}
 
 	/**
@@ -202,9 +284,9 @@ class Vips extends Image
 	#[Override]
 	protected function saveImageResource(string $imagePath, int $quality): void
 	{
-		[, $options] = $this->getSuffixAndSaveOptions(pathinfo($imagePath, PATHINFO_EXTENSION), $quality);
+		[$suffix, $options] = $this->getSuffixAndSaveOptions(pathinfo($imagePath, PATHINFO_EXTENSION), $quality);
 
-		$this->imageResource->writeToFile($imagePath, $options);
+		$this->getSaveableImageResource($suffix)->writeToFile($imagePath, $options);
 	}
 
 	/**
@@ -235,6 +317,41 @@ class Vips extends Image
 	#[Override]
 	public function getHeight(): int
 	{
+		if ($this->isAnimated) {
+			return $this->imageResource->get('page-height');
+		}
+
 		return $this->imageResource->height;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	#[Override]
+	public function apply(OperationInterface $operation): static
+	{
+		if (!$this->isAnimated) {
+			return parent::apply($operation);
+		}
+
+		$pageHeight = $this->imageResource->get('page-height');
+		$frameCount = intdiv($this->imageResource->height, $pageHeight);
+		$width = $this->imageResource->width;
+
+		$frames = [];
+
+		for ($i = 0; $i < $frameCount; $i++) {
+			$frame = $this->imageResource->crop(0, $i * $pageHeight, $width, $pageHeight);
+
+			$operation->apply($frame);
+
+			$frames[] = $frame;
+		}
+
+		$this->imageResource = VipsImage::arrayjoin($frames, ['across' => 1])->copy();
+
+		$this->imageResource->set('page-height', $frames[0]->height);
+
+		return $this;
 	}
 }
