@@ -32,7 +32,7 @@ use function strtolower;
 /**
  * Vips.
  *
- * @property ?VipsImage $imageResource
+ * @extends Image<VipsImage>
  */
 class Vips extends Image
 {
@@ -151,8 +151,6 @@ class Vips extends Image
 	#[Override]
 	protected function createImageResourceFromPath(string $imagePath): object
 	{
-		$this->imagePath = $imagePath;
-
 		try {
 			$imageResource = VipsImage::newFromFile(
 				$imagePath,
