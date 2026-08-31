@@ -24,7 +24,7 @@ class ColorSpace extends ColorSpaceInspector
 	 * @param Image &$imageResource
 	 */
 	#[Override]
-	public function inspect(object &$imageResource): mixed
+	public function inspect(object $imageResource): mixed
 	{
 		return match ($imageResource->interpretation) {
 			Interpretation::B_W, Interpretation::GREY16 => ColorSpaceEnum::Gray,

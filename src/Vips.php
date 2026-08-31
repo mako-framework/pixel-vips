@@ -14,6 +14,7 @@ use Jcupitt\Vips\Image as VipsImage;
 use Jcupitt\Vips\Interpretation;
 use mako\pixel\image\exceptions\ImageException;
 use mako\pixel\image\geometry\Dimensions;
+use mako\pixel\image\inspectors\InspectorInterface;
 use mako\pixel\image\operations\OperationInterface;
 use mako\pixel\image\vips\AccessMode;
 use Override;
@@ -239,6 +240,19 @@ class Vips extends Image
 	}
 
 	/**
+	 * Returns the first frame of the image.
+	 */
+	protected function getFirstFrame(): VipsImage
+	{
+		return $this->imageResource->crop(
+			0,
+			0,
+			$this->imageResource->width,
+			$this->imageResource->get('page-height')
+		);
+	}
+
+	/**
 	 * Returns the image resource prepared for saving with the specified suffix.
 	 *
 	 * Animated images are reduced to their first frame when saving
@@ -247,12 +261,7 @@ class Vips extends Image
 	protected function getSaveableImageResource(string $suffix): VipsImage
 	{
 		if ($this->isAnimated && !$this->suffixSupportsAnimation($suffix)) {
-			return $this->imageResource->crop(
-				0,
-				0,
-				$this->imageResource->width,
-				$this->imageResource->get('page-height')
-			);
+			return $this->getFirstFrame();
 		}
 
 		return $this->imageResource;
@@ -322,6 +331,19 @@ class Vips extends Image
 		}
 
 		return $this->imageResource->height;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	#[Override]
+	public function inspect(InspectorInterface $inspector): mixed
+	{
+		if (!$this->isAnimated) {
+			return $inspector->inspect($this->imageResource);
+		}
+
+		return $inspector->inspect($this->getFirstFrame());
 	}
 
 	/**

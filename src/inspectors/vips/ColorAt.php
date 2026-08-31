@@ -27,11 +27,11 @@ class ColorAt extends ColorAtInspector
 	 * @param Image &$imageResource
 	 */
 	#[Override]
-	public function inspect(object &$imageResource): mixed
+	public function inspect(object $imageResource): mixed
 	{
 		$this->validatePixel($this->pixel, $imageResource->width, $imageResource->height);
 
-		$image = $imageResource->copyMemory();
+		$image = $imageResource;
 
 		if ($image->interpretation !== Interpretation::SRGB) {
 			$image = $image->colourspace(Interpretation::SRGB);

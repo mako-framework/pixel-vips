@@ -37,9 +37,13 @@ class TopColors extends TopColorsInspector
 	 * @param Image &$imageResource
 	 */
 	#[Override]
-	public function inspect(object &$imageResource): mixed
+	public function inspect(object $imageResource): mixed
 	{
-		$image = $imageResource->colourspace(Interpretation::SRGB);
+		$image = $imageResource;
+
+		if ($image->interpretation !== Interpretation::SRGB) {
+			$image = $image->colourspace(Interpretation::SRGB);
+		}
 
 		if (!$image->hasAlpha()) {
 			$image = $image->bandjoin_const(255);
