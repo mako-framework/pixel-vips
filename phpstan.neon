@@ -4,10 +4,4 @@ parameters:
 	level: 5
 	reportUnmatchedIgnoredErrors: false
 	ignoreErrors:
-		- identifier: trait.unused
-		- '#Function frankenphp_handle_request not found\.#'
-		- '#Used function frankenphp_handle_request not found\.#'
-		- '#Function frankenphp_log not found\.#'
-		- '#Used function frankenphp_log not found\.#'
-		- '#Constant FRANKENPHP_LOG_LEVEL_([A-Z]+) not found\.#'
 
