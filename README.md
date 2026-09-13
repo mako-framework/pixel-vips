@@ -15,7 +15,13 @@ The package provides a high-performance libvips backend for common image transfo
 
 This package is built on top of [`jcupitt/vips`](https://packagist.org/packages/jcupitt/vips), which uses FFI to communicate with libvips.
 
-libvips is not bundled with this package and must be installed separately.
+## Installation
+
+```bash
+composer require mako/pixel-vips
+```
+
+The libvips library is not bundled with this package and must be installed separately.
 
 > Note that the libvips package name varies between operating systems and distributions. The following are examples and may differ depending on your system and the version of libvips available.
 
@@ -32,12 +38,6 @@ brew install vips
 ```
 
 See the [libvips installation documentation](https://www.libvips.org/install.html) for further instructions.
-
-## Installation
-
-```bash
-composer require mako/pixel-vips
-```
 
 ## Usage
 
