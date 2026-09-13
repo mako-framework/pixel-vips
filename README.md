@@ -9,8 +9,9 @@ The package provides a high-performance libvips backend for common image transfo
 
 ## Requirements
 
-- [FFI](https://www.php.net/manual/en/book.ffi.php) enabled
-- [libvips](https://www.libvips.org/) installed on the system
+* Mako ^13.0
+* [FFI](https://www.php.net/manual/en/book.ffi.php) enabled
+* [libvips](https://www.libvips.org/) installed on the system
 
 This package is built on top of [`jcupitt/vips`](https://packagist.org/packages/jcupitt/vips), which uses FFI to communicate with libvips.
 
