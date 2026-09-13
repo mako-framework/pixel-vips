@@ -22,11 +22,11 @@
     },
     "require": {
         "php": ">=8.5.0",
+        "mako/framework": "^13.0.0@dev",
         "ext-fileinfo": "*",
         "jcupitt/vips": "^2.6"
     },
     "require-dev": {
-        "mako/framework": "^13.0.0@dev",
         "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^13.3"
     },
