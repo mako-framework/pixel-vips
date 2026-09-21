@@ -72,18 +72,17 @@ Vips::setAccessMode(AccessMode::Sequential);
 
 ### Tuning cache and concurrency
 
-libvips maintains an operation cache and uses multiple worker threads by default. Since libvips state persists for the lifetime of the PHP process, the cache can lead to steadily growing memory usage in long-running processes such as queue workers and Apache/PHP-FPM workers. This is especially true when processing many unique images, where the cache provides little benefit.
+libvips keeps a process-wide operation cache and uses multiple worker threads by default. In long-lived PHP processes, especially when processing many different or large images, this can increase the application's memory usage.
 
-You can tune this behavior using the `Jcupitt\Vips\Config` class:
+For memory-constrained environments, consider limiting or disabling the operation cache and reducing concurrency:
 
 ```php
 use Jcupitt\Vips\Config;
 
-// Disable the operation cache
-Config::cacheSetMax(0);
-
-// Limit libvips to a single worker thread
-Config::concurrencySet(1);
+Config::cacheSetMax(0); // Disable the operation cache
+Config::concurrencySet(1); // Use one worker thread
 ```
 
-See the [libvips documentation](https://www.libvips.org/API/current/) for additional options such as `cacheSetMaxMem()` and `cacheSetMaxFiles()`.
+Disabling the cache can reduce memory usage at the cost of some performance, while lower concurrency reduces peak memory usage at the cost of throughput. Benchmark with your workload before changing these settings.
+
+See the [libvips documentation](https://www.libvips.org/API/current/) for additional options.
