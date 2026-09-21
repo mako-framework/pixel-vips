@@ -69,3 +69,21 @@ Vips::setAccessMode(AccessMode::Sequential);
 ```
 
 > Note that operations and inspectors that read pixels out of order (e.g. pixel inspection or rotation by arbitrary angles) will fail when using sequential access.
+
+### Tuning cache and concurrency
+
+libvips maintains an operation cache and uses multiple worker threads by default. Since libvips state persists for the lifetime of the PHP process, the cache can lead to steadily growing memory usage in long-running processes such as queue workers and Apache/PHP-FPM workers. This is especially true when processing many unique images, where the cache provides little benefit.
+
+You can tune this behavior using the `Jcupitt\Vips\Config` class:
+
+```php
+use Jcupitt\Vips\Config;
+
+// Disable the operation cache
+Config::cacheSetMax(0);
+
+// Limit libvips to a single worker thread
+Config::concurrencySet(1);
+```
+
+See the [libvips documentation](https://www.libvips.org/API/current/) for additional options such as `cacheSetMaxMem()` and `cacheSetMaxFiles()`.
